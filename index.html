@@ -18,54 +18,17 @@
     <header>
       <h1>Hello, I'm Bala</h1>
 
-      <p>Welcome to my corner of the internet. I'm an ML engineer at Aiverbalyze, where I teach machines to understand the languages spoken across India.</p>
+      <p>Welcome to my website! I'm an ML engineer at Aiverbalyze, where I train and evaluate speech recognition models and build real-time voice agents.</p>
 
-      <p>I'm drawn to <em>what happens after pretraining</em>: teaching a model with rewards instead of examples, building the environments it learns in, making it fast enough to talk to, and getting it to hear Telugu, Malayalam and ten more languages in noisy rooms.</p>
-
-      <p class="now"><span class="dot" aria-hidden="true"></span>Right now: writing an LLM inference engine and training models on Telugu RL environments.</p>
+      <p>Outside work, I go deep on LLMs: post-training them with reinforcement learning, building the environments they learn in, and understanding how inference really works by building it myself.</p>
 
       <p class="social">
         <a href="https://github.com/Makireddyvighnesh">[github]</a>
+        <a href="https://huggingface.co/makireddyvighnesh">[huggingface]</a>
         <a href="#" class="todo">[linkedin]</a>
         <a href="mailto:makireddyvighnesh@gmail.com">[email]</a>
       </p>
     </header>
-
-    <section>
-      <h2>Projects</h2>
-
-      <a class="row" href="#" data-todo>
-        <span class="title">An LLM inference engine, from scratch</span>
-        <span class="meta">INFERENCE</span>
-        <span class="desc">Every part of serving a language model, written by hand to understand where the milliseconds go.</span>
-      </a>
-
-      <a class="row" href="https://github.com/Makireddyvighnesh/telugu-rl-envs">
-        <span class="title">RL environments for Telugu</span>
-        <span class="meta">RL · AGENTS</span>
-        <span class="desc">Verifiable tasks so language models can be post-trained with GRPO in Telugu, not just English.</span>
-      </a>
-
-      <details class="row">
-        <summary>
-          <span class="title">Teaching a 4B model to write SQL with GRPO</span>
-          <span class="meta">RL</span>
-          <span class="desc">+10% pass@1 over SFT. 86.7% pass@4 on Spider, 70.7% on BIRD.</span>
-        </summary>
-        <div class="story">
-          <p><b>Problem.</b> Fine-tuning on examples teaches a model to write SQL that <em>looks</em> right. But a query is only right if it runs and returns the right rows.</p>
-          <p><b>Approach.</b> I generated reasoning traces with DeepSeek and kept the 9,000+ that checked out on Spider and BIRD. I fine-tuned Qwen3-4B on them with 4-bit QLoRA, then switched to GRPO with a reward that executes every candidate query against the database.</p>
-          <p><b>Result.</b> RL on top of SFT improved pass@1 by 10%. The 4B model reaches 86.7% pass@4 on Spider dev and 70.7% on BIRD dev.</p>
-          <p class="stack">Qwen3-4B · DeepSeek · QLoRA · GRPO · Tinker</p>
-        </div>
-      </details>
-
-      <a class="row" href="#" data-todo>
-        <span class="title">Document Q&amp;A with RAG</span>
-        <span class="meta">LLM</span>
-        <span class="desc">LlamaIndex retrieval behind a Node.js API, with a React chat UI and auth.</span>
-      </a>
-    </section>
 
     <section>
       <h2>Work</h2>
@@ -73,35 +36,36 @@
       <details class="row">
         <summary>
           <span class="title">ML Engineer, Aiverbalyze</span>
-          <span class="meta">ASR · 2026–now</span>
-          <span class="desc">One speech model for 12 Indic languages, and a voice agent you can interrupt.</span>
+          <span class="meta">2026–now</span>
+          <span class="desc">Speech recognition for 12 Indic languages, and a voice-to-voice pipeline that answers in under ~1.2 s at p95.</span>
         </summary>
         <div class="story">
-          <p><b>12 languages, one model.</b> I fine-tuned a FastConformer RNN-T model (Nemotron ASR 3.5) across 12 Indic languages, reaching 19.2% average OIWER, using synthetic domain data I generated and curated.</p>
-          <p><b>The Malayalam bug.</b> Malayalam transcripts kept drifting into other languages mid-sentence. Error analysis traced it to cross-language confusion, and masked language-token conditioning kept the decoder in the right language. Malayalam improved by about 40%.</p>
-          <p><b>Barge-in.</b> In our speech → LLM → speech pipeline, the agent now stops the moment you start talking, cancelling generation and playback. DeepFilterNet, Silero VAD and utterance segmentation let an offline ASR model keep up with live, noisy audio.</p>
+          <h3>Speech recognition</h3>
+          <p>I train, evaluate and analyze ASR models. I fine-tuned a FastConformer RNN-T model (Nemotron ASR 3.5) across 12 Indic languages to 19.2% average OIWER, on synthetic domain data I generated and curated. Error analysis showed Malayalam drifting into other languages mid-sentence, and masked language-token conditioning fixed it, improving Malayalam by about 40%.</p>
+          <h3>Voice-to-voice pipeline</h3>
+          <p>Speech in, LLM, speech out, in real time. I added barge-in, so the agent stops generating and speaking the moment the user talks, plus turn triggering and streaming preprocessing (DeepFilterNet, Silero VAD, utterance segmentation). End-to-end response latency is under ~1.2 s at p95.</p>
         </div>
       </details>
 
       <details class="row">
         <summary>
           <span class="title">Computer Vision Intern, BigThinx</span>
-          <span class="meta">VISION · 2025–26</span>
-          <span class="desc">Body and garment understanding from two photos.</span>
+          <span class="meta">2025–26</span>
+          <span class="desc">Body segmentation and pose from two photos, for fashion.</span>
         </summary>
         <div class="story">
-          <p>A segmentation and pose pipeline (U²-Net, P3M-Net, DWPose, MediaPipe) for fashion. I tested SMPL for 3D body meshes from sparse views, which reshaped the approach for loose clothing. Low-light enhancement with LLFormer improved the pipeline by 30%, served live through Gradio.</p>
+          <p>A segmentation and pose pipeline (U²-Net, P3M-Net, DWPose, MediaPipe). I tested SMPL for 3D body meshes from sparse views, which changed the approach for loose clothing. Low-light enhancement with LLFormer improved the pipeline by 30%, served live through Gradio.</p>
         </div>
       </details>
 
       <details class="row">
         <summary>
           <span class="title">AI/ML Intern, IF MedTech</span>
-          <span class="meta">MEDICAL · 2025</span>
-          <span class="desc">Making models work on a few hundred medical images.</span>
+          <span class="meta">2025</span>
+          <span class="desc">Medical imaging models on small datasets.</span>
         </summary>
         <div class="story">
-          <p>A ViT fine-tuned on a small imaging dataset and quantized to INT8 at 89% accuracy. Faster R-CNN and DeepLabV3 for anatomy detection and segmentation (0.64 IoU). A RAG assistant over a medical reference book with Llama 3 8B.</p>
+          <p>A ViT fine-tuned on limited data and quantized to INT8 at 89% accuracy. Faster R-CNN and DeepLabV3 for anatomy detection and segmentation (0.64 IoU). A RAG assistant over a medical reference book with Llama 3 8B.</p>
         </div>
       </details>
 
@@ -111,8 +75,61 @@
       </div>
     </section>
 
+    <section>
+      <h2>Projects</h2>
+
+      <details class="row">
+        <summary>
+          <span class="title">Mini LLM inference engine</span>
+          <span class="meta">INFERENCE</span>
+          <span class="desc">Built to understand what really happens when an LLM serves requests. Qwen3-4B on an L4 GPU.</span>
+        </summary>
+        <div class="story">
+          <p>I wanted to understand inference, not just call it: what the metrics mean, what breaks under load, and why. So I built a small engine and implemented the core ideas myself.</p>
+          <ul>
+            <li>Continuous batching and a request scheduler</li>
+            <li>Prefix caching to reuse shared prompt prefixes</li>
+            <li>Split-KV attention</li>
+            <li>CUDA graphs to cut launch overhead</li>
+          </ul>
+          <p class="stack">Qwen3-4B · NVIDIA L4</p>
+        </div>
+      </details>
+
+      <details class="row">
+        <summary>
+          <span class="title">Telugu RL environments + GRPO</span>
+          <span class="meta">RL</span>
+          <span class="desc">Transliteration exact match from 4.6% to 29.1% on a 1.5B model, trained through my own environment.</span>
+        </summary>
+        <div class="story">
+          <p>Reinforcement learning environments for Telugu built on OpenEnv, covering transliteration, OCR, ASR and translation, from open datasets (Aksharantar, FLEURS, Samanantar and others). Each one serves a task, grades the answer against a hidden reference, and blocks reward hacking: empty, looping or ballooning answers score zero.</p>
+          <p>I trained Qwen2.5-1.5B-Instruct with LoRA for 1,000 GRPO steps through the transliteration environment on 2×T4. On all 10,260 Aksharantar test words:</p>
+          <table>
+            <tr><th></th><th>base</th><th>GRPO</th></tr>
+            <tr><td>character error rate</td><td>0.547</td><td><b>0.204</b></td></tr>
+            <tr><td>exact match</td><td>4.6%</td><td><b>29.1%</b></td></tr>
+          </table>
+          <p class="links"><a href="https://github.com/Makireddyvighnesh/telugu-rl-envs">code ↗</a> <a href="https://huggingface.co/makireddyvighnesh/Qwen2.5-1.5B-Instruct-telugu-translit-grpo">model ↗</a></p>
+        </div>
+      </details>
+
+      <details class="row">
+        <summary>
+          <span class="title">Text-to-SQL with SFT + GRPO</span>
+          <span class="meta">RL</span>
+          <span class="desc">Qwen3-4B with execution rewards: 86.7% pass@4 on Spider, 70.7% on BIRD.</span>
+        </summary>
+        <div class="story">
+          <p>Fine-tuning on examples teaches a model to write SQL that <em>looks</em> right. But a query is only right if it runs and returns the right rows.</p>
+          <p>I generated and validated 9,000+ chain-of-thought SQL examples with DeepSeek, fine-tuned Qwen3-4B with 4-bit QLoRA, then trained with GRPO using a reward that executes each query. That improved pass@1 by 10% over the SFT model.</p>
+          <p class="stack">Qwen3-4B · DeepSeek · QLoRA · GRPO · Tinker</p>
+        </div>
+      </details>
+    </section>
+
     <footer>
-      <p>Always happy to talk about RL, inference, or speech. <a href="mailto:makireddyvighnesh@gmail.com">Say hi</a>.</p>
+      <p>Always happy to talk about RL, inference or speech. <a href="mailto:makireddyvighnesh@gmail.com">Say hi</a>.</p>
     </footer>
   </main>
 </body>
