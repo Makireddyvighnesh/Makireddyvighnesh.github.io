@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bala Vighnesh Reddy</title>
+  <meta name="description" content="Bala Vighnesh Reddy, machine learning engineer working on LLMs, RL post-training, agents, LLM inference and ASR.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <p class="name">Bala Vighnesh Reddy <span class="role">· machine learning engineer</span></p>
+      <h1>I teach language models to reason, to act, to listen, and to run fast.</h1>
+      <p class="lede">
+        That means RL post-training, agents, LLM inference and speech
+        recognition. What ties it together: I like the part after the
+        benchmark, where a model meets real users, noisy audio and a
+        latency budget.
+      </p>
+      <ul class="interests">
+        <li>LLMs</li><li>RL post-training</li><li>Agents</li><li>LLM inference</li><li>ASR</li>
+      </ul>
+    </header>
+
+    <section>
+      <h2>Three things I've learned</h2>
+
+      <article class="belief">
+        <h3>Read the errors before you touch the architecture.</h3>
+        <p>
+          Our Malayalam speech model kept slipping into other languages
+          mid-sentence. The fix wasn't a bigger model. Error analysis showed
+          the confusion, and masking the language token at decode time cut
+          Malayalam errors by about <strong>40%</strong>.
+        </p>
+      </article>
+
+      <article class="belief">
+        <h3>Reward the thing you actually want.</h3>
+        <p>
+          For text-to-SQL I fine-tuned Qwen3-4B, then trained it with GRPO
+          using one reward: does the query run and return the right rows.
+          That beat the supervised checkpoint by <strong>10%</strong> pass@1
+          and reached <strong>86.7%</strong> pass@4 on Spider and
+          <strong>70.7%</strong> on BIRD. I've kept building RL environments
+          since.
+        </p>
+      </article>
+
+      <article class="belief">
+        <h3>A model isn't done until someone can talk to it.</h3>
+        <p>
+          A voice agent that keeps talking while you interrupt it feels
+          broken, whatever its accuracy. So I built barge-in: when the user
+          speaks, generation and playback stop. Latency, cancellation and
+          serving are part of the model, which is why I'm now writing an
+          inference engine.
+        </p>
+      </article>
+    </section>
+
+    <section>
+      <h2>Right now</h2>
+      <ul class="now">
+        <li>
+          <span class="tag">building</span>
+          <span>An LLM inference engine, to understand serving from the kernel up.</span>
+        </li>
+        <li>
+          <span class="tag">training</span>
+          <span>RL environments for language models with GRPO, including <a href="https://github.com/Makireddyvighnesh/telugu-rl-envs">Telugu tasks</a>.</span>
+        </li>
+        <li>
+          <span class="tag">shipping</span>
+          <span>Indic speech recognition at Aiverbalyze.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>How I got here</h2>
+      <ol class="path">
+        <li>
+          <span class="when">2026 →</span>
+          <div>
+            <h3>Speech, at Aiverbalyze</h3>
+            <p>Trained a FastConformer ASR model across 12 Indic languages
+            (19.2% average OIWER) and made the real-time voice pipeline
+            hold up to noise and interruptions.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when">2025</span>
+          <div>
+            <h3>Vision, at BigThinx</h3>
+            <p>Segmentation and pose estimation for fashion from two photos.
+            Low-light enhancement lifted the pipeline by 30%.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when">2025</span>
+          <div>
+            <h3>Medicine, at IF MedTech</h3>
+            <p>Learned how far you can stretch a small dataset: a quantized
+            ViT at 89% accuracy, segmentation at 0.64 IoU, and a RAG
+            assistant over a medical reference book.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when">2021</span>
+          <div>
+            <h3>Computer science, at IIIT Manipur</h3>
+            <p>B.Tech, 2021 to 2025.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>What I reach for</h2>
+      <p class="tools">
+        PyTorch and Hugging Face for most things. QLoRA, Unsloth and GRPO for
+        fine-tuning. NeMo for speech. FastAPI, Docker and Gradio to get it in
+        front of people. C++ when Python is too slow.
+      </p>
+    </section>
+
+    <footer>
+      <h2>Say hello</h2>
+      <p>
+        <a href="mailto:makireddyvighnesh@gmail.com">makireddyvighnesh@gmail.com</a>
+        <span class="sep">·</span>
+        <a href="https://github.com/Makireddyvighnesh">GitHub</a>
+      </p>
+    </footer>
+  </main>
+</body>
+</html>
