@@ -58,13 +58,6 @@ a:hover { color: var(--accent); text-decoration-color: currentColor; }
 
 /* Intro */
 
-.greet {
-  font: 15px "Noto Sans Telugu", sans-serif;
-  color: var(--accent);
-  margin: 0 0 6px;
-  cursor: help;
-}
-
 h1 {
   font-weight: 500;
   font-size: 40px;
