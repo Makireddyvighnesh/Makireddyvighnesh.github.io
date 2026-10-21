@@ -4,10 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bala Vighnesh Reddy</title>
-  <meta name="description" content="Hi, I'm Bala, an ML engineer into LLMs, RL post-training, agents, LLM inference and speech recognition.">
+  <meta name="description" content="ML engineer working on LLM inference, RL post-training and speech recognition.">
+  <link rel="canonical" href="https://makireddyvighnesh.github.io/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://makireddyvighnesh.github.io/">
+  <meta property="og:title" content="Bala Vighnesh Reddy">
+  <meta property="og:description" content="ML engineer working on LLM inference, RL post-training and speech recognition.">
+  <meta property="og:image" content="https://makireddyvighnesh.github.io/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Bala Vighnesh Reddy, ML engineer: LLM inference, RL post-training, speech">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bala Vighnesh Reddy">
+  <meta name="twitter:description" content="ML engineer working on LLM inference, RL post-training and speech recognition.">
+  <meta name="twitter:image" content="https://makireddyvighnesh.github.io/og.png">
   <meta name="theme-color" content="#fcfcfa" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
@@ -26,6 +41,7 @@
   <main>
     <header>
       <h1>Hello, I'm Bala</h1>
+      <p class="headline">ML Engineer · LLM inference, RL post-training, speech</p>
 
       <p>Welcome to my website! I'm an ML engineer at Aiverbalyze, where I train and evaluate speech recognition models and build real-time voice agents.</p>
 
@@ -34,9 +50,21 @@
       <p class="social">
         <a href="https://github.com/Makireddyvighnesh">[github]</a>
         <a href="https://huggingface.co/makireddyvighnesh">[huggingface]</a>
-        <a href="mailto:makireddyvighnesh@gmail.com">[email]</a>
+        <a href="resume.pdf">[resume]</a>
+        <!-- <a href="LINKEDIN_URL">[linkedin]</a> -->
+        <a href="mailto:makireddyvighnesh@gmail.com">[makireddyvighnesh@gmail.com]</a>
       </p>
     </header>
+
+    <section>
+      <h2>Writing</h2>
+
+      <a class="row internal" href="posts/inference-engine.html">
+        <span class="title">What I learned building an LLM inference engine</span>
+        <span class="meta">INFERENCE · Oct 2026</span>
+        <span class="desc">Six techniques, one L4 GPU, and the bottleneck each one actually removes.</span>
+      </a>
+    </section>
 
     <section>
       <h2>Work</h2>
@@ -94,15 +122,15 @@
         </summary>
         <div class="story">
           <p>I wanted to understand inference, not just call it: what the metrics mean, what breaks under load, and why. So I built an engine from a plain decode loop upward, adding one technique at a time and measuring the exact metric it should fix.</p>
-          <table>
-            <tr><th>technique</th><th>without</th><th>with</th><th>gain</th></tr>
-            <tr><td>KV cache</td><td>113 ms/tok</td><td>55.9 ms/tok</td><td><b>2.0×</b></td></tr>
-            <tr><td>Continuous batching</td><td>9.65 s TTFT</td><td>0.57 s</td><td><b>17×</b></td></tr>
-            <tr><td>Paged KV + Triton</td><td>83.9 tok/s</td><td>195 tok/s</td><td><b>2.3×</b></td></tr>
-            <tr><td>CUDA Graphs</td><td>56.1 ms/tok</td><td>22.6 ms/tok</td><td><b>2.5×</b></td></tr>
-            <tr><td>Prefix cache</td><td>1,481 ms TTFT</td><td>114 ms</td><td><b>13×</b></td></tr>
-            <tr><td>Mixed batching</td><td>3.26 s stall</td><td>0.17 s</td><td><b>19×</b></td></tr>
-          </table>
+          <figure class="chart" aria-label="Speedup from each technique on the metric it targets">
+            <figcaption>Speedup on the metric each technique targets</figcaption>
+            <div class="bar" title="KV cache: 113 → 55.9 ms/token"><span class="lbl">KV cache<small>113 → 55.9 ms/token</small></span><span class="track"><i style="--v:10.5%"></i><b>2.0×</b></span></div>
+            <div class="bar" title="Continuous batching: 9.65 → 0.57 s to first token"><span class="lbl">Continuous batching<small>9.65 → 0.57 s to first token</small></span><span class="track"><i style="--v:89.5%"></i><b>17×</b></span></div>
+            <div class="bar" title="Paged KV + Triton: 83.9 → 195 tok/s"><span class="lbl">Paged KV + Triton<small>83.9 → 195 tok/s</small></span><span class="track"><i style="--v:12.1%"></i><b>2.3×</b></span></div>
+            <div class="bar" title="CUDA Graphs: 56.1 → 22.6 ms/token"><span class="lbl">CUDA Graphs<small>56.1 → 22.6 ms/token</small></span><span class="track"><i style="--v:13.2%"></i><b>2.5×</b></span></div>
+            <div class="bar" title="Prefix cache: 1,481 → 114 ms to first token"><span class="lbl">Prefix cache<small>1,481 → 114 ms to first token</small></span><span class="track"><i style="--v:68.4%"></i><b>13×</b></span></div>
+            <div class="bar" title="Mixed batching: 3.26 → 0.17 s worst stall"><span class="lbl">Mixed batching<small>3.26 → 0.17 s worst stall</small></span><span class="track"><i style="--v:100.0%"></i><b>19×</b></span></div>
+          </figure>
           <p>With CUDA Graph decode it serves 370 tok/s at batch 16, against 229 for Hugging Face <code>generate()</code>. Four fused Triton kernels cut 8K-token prefill by 23%. Every engine was checked token for token against Hugging Face, and all scheduling policies produce identical outputs.</p>
           <p class="links"><a href="https://github.com/Makireddyvighnesh/mini-inference-engine">code and benchmarks ↗</a></p>
         </div>
@@ -117,11 +145,19 @@
         <div class="story">
           <p>Reinforcement learning environments for Telugu built on OpenEnv, covering transliteration, OCR, ASR and translation, from open datasets (Aksharantar, FLEURS, Samanantar and others). Each one serves a task, grades the answer against a hidden reference, and blocks reward hacking: empty, looping or ballooning answers score zero.</p>
           <p>I trained Qwen2.5-1.5B-Instruct with LoRA for 1,000 GRPO steps through the transliteration environment on 2×T4. On all 10,260 Aksharantar test words:</p>
-          <table>
-            <tr><th></th><th>base</th><th>GRPO</th></tr>
-            <tr><td>character error rate</td><td>0.547</td><td><b>0.204</b></td></tr>
-            <tr><td>exact match</td><td>4.6%</td><td><b>29.1%</b></td></tr>
-          </table>
+          <figure class="chart pair" aria-label="Base model versus GRPO on the Aksharantar test set">
+            <figcaption>Base vs. GRPO, 10,260 test words <span class="key"><i class="k0"></i>base <i class="k1"></i>GRPO</span></figcaption>
+            <div class="metric"><span class="lbl">Exact match<small>higher is better</small></span>
+              <div class="bars">
+                <div class="bar" title="Base: 4.6%"><span class="track"><i class="b0" style="--v:15.8%"></i><b>4.6%</b></span></div>
+                <div class="bar" title="GRPO: 29.1%"><span class="track"><i style="--v:100%"></i><b>29.1%</b></span></div>
+              </div></div>
+            <div class="metric"><span class="lbl">Character error rate<small>lower is better</small></span>
+              <div class="bars">
+                <div class="bar" title="Base: 0.547"><span class="track"><i class="b0" style="--v:100%"></i><b>0.547</b></span></div>
+                <div class="bar" title="GRPO: 0.204"><span class="track"><i style="--v:37.3%"></i><b>0.204</b></span></div>
+              </div></div>
+          </figure>
           <p class="links"><a href="https://github.com/Makireddyvighnesh/telugu-rl-envs">code ↗</a> <a href="https://huggingface.co/makireddyvighnesh/Qwen2.5-1.5B-Instruct-telugu-translit-grpo">model ↗</a></p>
         </div>
       </details>
