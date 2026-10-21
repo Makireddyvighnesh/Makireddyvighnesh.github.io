@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bala Vighnesh Reddy</title>
+  <meta name="description" content="Hi, I'm Bala, an ML engineer into LLMs, RL post-training, agents, LLM inference and speech recognition.">
+  <meta name="theme-color" content="#fcfcfa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Hello, I'm Bala</h1>
+
+      <p>Welcome to my website! I'm an ML engineer at Aiverbalyze, where I train and evaluate speech recognition models and build real-time voice agents.</p>
+
+      <p>Outside work, I go deep on LLMs: post-training them with reinforcement learning, building the environments they learn in, and understanding how inference really works by building it myself.</p>
+
+      <p class="social">
+        <a href="https://github.com/Makireddyvighnesh">[github]</a>
+        <a href="https://huggingface.co/makireddyvighnesh">[huggingface]</a>
+        <a href="mailto:makireddyvighnesh@gmail.com">[email]</a>
+      </p>
+    </header>
+
+    <section>
+      <h2>Work</h2>
+
+      <details class="row">
+        <summary>
+          <span class="title">ML Engineer, Aiverbalyze</span>
+          <span class="meta">2026–now</span>
+          <span class="desc">Speech recognition for 12 Indic languages, and a voice-to-voice pipeline that answers in under ~1.2 s at p95.</span>
+        </summary>
+        <div class="story">
+          <h3>Speech recognition</h3>
+          <p>I train, evaluate and analyze ASR models. I fine-tuned a FastConformer RNN-T model (Nemotron ASR 3.5) across 12 Indic languages to 19.2% average OIWER, on synthetic domain data I generated and curated. Error analysis showed Malayalam drifting into other languages mid-sentence, and masked language-token conditioning fixed it, improving Malayalam by about 40%.</p>
+          <h3>Voice-to-voice pipeline</h3>
+          <p>Speech in, LLM, speech out, in real time. I added barge-in, so the agent stops generating and speaking the moment the user talks, plus turn triggering and streaming preprocessing (DeepFilterNet, Silero VAD, utterance segmentation). End-to-end response latency is under ~1.2 s at p95.</p>
+        </div>
+      </details>
+
+      <details class="row">
+        <summary>
+          <span class="title">Computer Vision Intern, BigThinx</span>
+          <span class="meta">2025–26</span>
+          <span class="desc">Body segmentation and pose from two photos, for fashion.</span>
+        </summary>
+        <div class="story">
+          <p>A segmentation and pose pipeline (U²-Net, P3M-Net, DWPose, MediaPipe). I tested SMPL for 3D body meshes from sparse views, which changed the approach for loose clothing. Low-light enhancement with LLFormer improved the pipeline by 30%, served live through Gradio.</p>
+        </div>
+      </details>
+
+      <details class="row">
+        <summary>
+          <span class="title">AI/ML Intern, IF MedTech</span>
+          <span class="meta">2025</span>
+          <span class="desc">Medical imaging models on small datasets.</span>
+        </summary>
+        <div class="story">
+          <p>A ViT fine-tuned on limited data and quantized to INT8 at 89% accuracy. Faster R-CNN and DeepLabV3 for anatomy detection and segmentation (0.64 IoU). A RAG assistant over a medical reference book with Llama 3 8B.</p>
+        </div>
+      </details>
+
+      <div class="row static">
+        <span class="title">B.Tech in Computer Science, IIIT Manipur</span>
+        <span class="meta">2021–25</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Projects</h2>
+
+      <details class="row">
+        <summary>
+          <span class="title">Mini LLM inference engine</span>
+          <span class="meta">INFERENCE</span>
+          <span class="desc">Serving Qwen3-4B (FP8) on one L4 GPU, one bottleneck at a time. Up to 19× better on the metric each technique targets.</span>
+        </summary>
+        <div class="story">
+          <p>I wanted to understand inference, not just call it: what the metrics mean, what breaks under load, and why. So I built an engine from a plain decode loop upward, adding one technique at a time and measuring the exact metric it should fix.</p>
+          <table>
+            <tr><th>technique</th><th>without</th><th>with</th><th>gain</th></tr>
+            <tr><td>KV cache</td><td>113 ms/tok</td><td>55.9 ms/tok</td><td><b>2.0×</b></td></tr>
+            <tr><td>Continuous batching</td><td>9.65 s TTFT</td><td>0.57 s</td><td><b>17×</b></td></tr>
+            <tr><td>Paged KV + Triton</td><td>83.9 tok/s</td><td>195 tok/s</td><td><b>2.3×</b></td></tr>
+            <tr><td>CUDA Graphs</td><td>56.1 ms/tok</td><td>22.6 ms/tok</td><td><b>2.5×</b></td></tr>
+            <tr><td>Prefix cache</td><td>1,481 ms TTFT</td><td>114 ms</td><td><b>13×</b></td></tr>
+            <tr><td>Mixed batching</td><td>3.26 s stall</td><td>0.17 s</td><td><b>19×</b></td></tr>
+          </table>
+          <p>With CUDA Graph decode it serves 370 tok/s at batch 16, against 229 for Hugging Face <code>generate()</code>. Four fused Triton kernels cut 8K-token prefill by 23%. Every engine was checked token for token against Hugging Face, and all scheduling policies produce identical outputs.</p>
+          <p class="links"><a href="https://github.com/Makireddyvighnesh/mini-inference-engine">code and benchmarks ↗</a></p>
+        </div>
+      </details>
+
+      <details class="row">
+        <summary>
+          <span class="title">Telugu RL environments + GRPO</span>
+          <span class="meta">RL</span>
+          <span class="desc">Transliteration exact match from 4.6% to 29.1% on a 1.5B model, trained through my own environment.</span>
+        </summary>
+        <div class="story">
+          <p>Reinforcement learning environments for Telugu built on OpenEnv, covering transliteration, OCR, ASR and translation, from open datasets (Aksharantar, FLEURS, Samanantar and others). Each one serves a task, grades the answer against a hidden reference, and blocks reward hacking: empty, looping or ballooning answers score zero.</p>
+          <p>I trained Qwen2.5-1.5B-Instruct with LoRA for 1,000 GRPO steps through the transliteration environment on 2×T4. On all 10,260 Aksharantar test words:</p>
+          <table>
+            <tr><th></th><th>base</th><th>GRPO</th></tr>
+            <tr><td>character error rate</td><td>0.547</td><td><b>0.204</b></td></tr>
+            <tr><td>exact match</td><td>4.6%</td><td><b>29.1%</b></td></tr>
+          </table>
+          <p class="links"><a href="https://github.com/Makireddyvighnesh/telugu-rl-envs">code ↗</a> <a href="https://huggingface.co/makireddyvighnesh/Qwen2.5-1.5B-Instruct-telugu-translit-grpo">model ↗</a></p>
+        </div>
+      </details>
+
+      <details class="row">
+        <summary>
+          <span class="title">Text-to-SQL with SFT + GRPO</span>
+          <span class="meta">RL</span>
+          <span class="desc">Qwen3-4B with execution rewards: 86.7% pass@4 on Spider, 70.7% on BIRD.</span>
+        </summary>
+        <div class="story">
+          <p>Fine-tuning on examples teaches a model to write SQL that <em>looks</em> right. But a query is only right if it runs and returns the right rows.</p>
+          <p>I generated and validated 9,000+ chain-of-thought SQL examples with DeepSeek, fine-tuned Qwen3-4B with 4-bit QLoRA, then trained with GRPO using a reward that executes each query. That improved pass@1 by 10% over the SFT model.</p>
+          <p class="stack">Qwen3-4B · DeepSeek · QLoRA · GRPO · Tinker</p>
+        </div>
+      </details>
+    </section>
+
+    <footer>
+      <p>Always happy to talk about RL, inference or speech. <a href="mailto:makireddyvighnesh@gmail.com">Say hi</a>.</p>
+    </footer>
+  </main>
+</body>
+</html>
