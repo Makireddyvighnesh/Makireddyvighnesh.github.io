@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What I learned building an LLM inference engine · Bala Vighnesh Reddy</title>
+  <meta name="description" content="Six techniques, one L4 GPU, and the bottleneck each one actually removes.">
+  <link rel="canonical" href="https://makireddyvighnesh.github.io/posts/inference-engine.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://makireddyvighnesh.github.io/posts/inference-engine.html">
+  <meta property="og:title" content="What I learned building an LLM inference engine">
+  <meta property="og:description" content="Six techniques, one L4 GPU, and the bottleneck each one actually removes.">
+  <meta property="og:image" content="https://makireddyvighnesh.github.io/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="What I learned building an LLM inference engine">
+  <meta name="twitter:description" content="Six techniques, one L4 GPU, and the bottleneck each one actually removes.">
+  <meta name="twitter:image" content="https://makireddyvighnesh.github.io/og.png">
+  <meta name="theme-color" content="#fcfcfa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <script>
+    // Apply the saved theme before first paint; with no saved choice the system setting wins.
+    try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <button class="theme" type="button" aria-label="Toggle dark mode">
+    <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
+    <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+  </button>
+
+  <main>
+    <article class="post">
+      <a class="back" href="../">← Bala Vighnesh Reddy</a>
+      <h1>What I learned building an LLM inference engine</h1>
+      <p class="date">October 2026 · Qwen3-4B-Instruct (FP8) on one NVIDIA L4</p>
+
+      <p>I could call an inference server, but I couldn't really explain what it was doing. What does time to first token measure, and why does it explode under load? Why does a long prompt make everyone else's stream stutter? What breaks first when requests pile up?</p>
+
+      <p>So I built a small engine to find out. The rule I set myself was simple: start from a plain decode loop, add <em>one</em> technique at a time, and measure the exact metric that technique is supposed to fix, with nothing else changing.</p>
+
+    <figure class="chart" aria-label="Speedup from each technique on the metric it targets">
+      <figcaption>Speedup on the metric each technique targets</figcaption>
+      <div class="bar" title="KV cache: 113 → 55.9 ms/token"><span class="lbl">KV cache<small>113 → 55.9 ms/token</small></span><span class="track"><i style="--v:10.5%"></i><b>2.0×</b></span></div>
+      <div class="bar" title="Continuous batching: 9.65 → 0.57 s to first token"><span class="lbl">Continuous batching<small>9.65 → 0.57 s to first token</small></span><span class="track"><i style="--v:89.5%"></i><b>17×</b></span></div>
+      <div class="bar" title="Paged KV + Triton: 83.9 → 195 tok/s"><span class="lbl">Paged KV + Triton<small>83.9 → 195 tok/s</small></span><span class="track"><i style="--v:12.1%"></i><b>2.3×</b></span></div>
+      <div class="bar" title="CUDA Graphs: 56.1 → 22.6 ms/token"><span class="lbl">CUDA Graphs<small>56.1 → 22.6 ms/token</small></span><span class="track"><i style="--v:13.2%"></i><b>2.5×</b></span></div>
+      <div class="bar" title="Prefix cache: 1,481 → 114 ms to first token"><span class="lbl">Prefix cache<small>1,481 → 114 ms to first token</small></span><span class="track"><i style="--v:68.4%"></i><b>13×</b></span></div>
+      <div class="bar" title="Mixed batching: 3.26 → 0.17 s worst stall"><span class="lbl">Mixed batching<small>3.26 → 0.17 s worst stall</small></span><span class="track"><i style="--v:100.0%"></i><b>19×</b></span></div>
+    </figure>
+
+      <h2>1. Measure before you optimize</h2>
+      <p>The first thing I built wasn't an optimization. It was a benchmark harness, a Hugging Face <code>generate()</code> baseline and a manual decode loop, all reporting the same request events. Every number below comes from that harness: one warm-up plus three measured runs, medians, on a single L4 with no memory pressure.</p>
+      <p>I also checked every engine token for token against Hugging Face <code>generate()</code>. A fast engine that changes the output isn't faster, it's wrong.</p>
+
+      <h2>2. The KV cache is the first 2×</h2>
+      <p>Without a cache, every new token re-runs the whole prompt. Keeping each layer's keys and values took time per token from 113 ms to 55.9 ms on a 512-token prompt, and the gap grows with prompt length. I gave capacity, positions and release explicit ownership instead of hiding them in library state, which made everything after this easier to reason about.</p>
+
+      <h2>3. Under load, scheduling matters more than kernels</h2>
+      <p>With static batching, a new request waits for the whole running batch to finish. Serving 16 requests arriving every 150 ms, median time to first token was <strong>9.65 s</strong>. Continuous batching admits new requests between decode steps and retires finished ones immediately. That brought it to <strong>0.57 s</strong> without touching a single kernel.</p>
+      <p>Paged KV came next: fixed-size pages with per-request block tables, so the batch can change without copying or re-padding caches. Throughput went from 83.9 to 195 tok/s, and peak memory dropped from 10.8 to 5.6 GiB.</p>
+
+      <h2>4. Sometimes the GPU is waiting on Python</h2>
+      <p>This surprised me most. Decode was host-bound: about 2,000 kernel launches per token, with the GPU only ~40% busy. Replaying a captured CUDA graph removes the launch overhead. Single-request decode went from 56.1 to 22.6 ms per token, and the GPU went to ~90% busy.</p>
+      <p>There was a trade-off on the way. Eager paged decode is slightly <em>slower</em> per step than the dense cache (60 vs 56 ms), but it is what makes graph capture possible. In the serving engine I capture one graph per batch-size bucket and pad the live batch to it, so requests can still join and leave between steps.</p>
+
+      <h2>5. Don't recompute what you've already seen</h2>
+      <p>Chat requests often share a long system prompt. With a prefix cache, identical prefixes share immutable KV pages, tracked with reference counts and evicted LRU. For 8 requests sharing a 2,048-token system prompt, time to first token fell from 1,481 ms to 114 ms.</p>
+
+      <h2>6. Protect the users who are already streaming</h2>
+      <p>A single 6,144-token prompt processed in one go froze everyone who was decoding for 3.26 s. Mixed batching fixes this: each step holds every decode token plus a chunk of pending prompts, with a cost model choosing chunk size by time. The worst pause dropped to 0.17 s.</p>
+      <p>The honest finding: on this workload a fixed 512-token chunk budget did just as well. Adaptive sizing only pays off when a long prompt arrives on an idle engine.</p>
+
+      <h2>What I'd tell myself at the start</h2>
+      <ul>
+        <li>Pick the metric first. TTFT, time per token, throughput and worst pause each fail for different reasons.</li>
+        <li>Find out where the time goes before writing a kernel. My biggest single-request win came from removing launch overhead, not from faster math.</li>
+        <li>Check correctness on every change. All my scheduling policies produce identical tokens, so speed never cost me the output.</li>
+        <li>Report trade-offs. Paged decode was slower until graphs ran on top of it, and graphs don't help prefill at all.</li>
+      </ul>
+
+      <p>The code, every benchmark and the commands to reproduce them are on <a href="https://github.com/Makireddyvighnesh/mini-inference-engine">GitHub</a>.</p>
+    </article>
+
+    <footer>
+      <p><a href="../">← Back home</a> · <a href="mailto:makireddyvighnesh@gmail.com">makireddyvighnesh@gmail.com</a></p>
+    </footer>
+  </main>
+
+  <script>
+    document.querySelector(".theme").addEventListener("click", function () {
+      var root = document.documentElement;
+      var dark = root.dataset.theme
+        ? root.dataset.theme === "dark"
+        : matchMedia("(prefers-color-scheme: dark)").matches;
+      root.dataset.theme = dark ? "light" : "dark";
+      try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+    });
+  </script>
+</body>
+</html>
