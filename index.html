@@ -3,163 +3,76 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bala Vighnesh Reddy</title>
-  <meta name="description" content="Bala Vighnesh Reddy, ML engineer working on RL post-training, agents, LLM inference and speech recognition.">
+  <title>Bala's Website</title>
+  <meta name="description" content="Hi, I'm Bala, an ML engineer into LLMs, RL post-training, agents, LLM inference and speech recognition.">
+  <meta name="theme-color" content="#ffffff">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main>
-    <nav class="top">
-      <span>Bala Vighnesh Reddy</span>
-      <span><a href="#work">Work</a><a href="#earlier">Earlier</a><a href="#contact">Contact</a></span>
-    </nav>
+    <h1>Hello, I'm Bala</h1>
 
-    <header class="hero">
-      <h1>I build what happens<br>after pretraining.</h1>
-      <p class="sub">
-        ML engineer. I post-train LLMs with reinforcement learning, build the
-        environments they learn in, write the engine that serves them, and
-        teach them to hear 12 Indian languages.
-      </p>
-      <div class="stats">
-        <div><b>86.7%</b><span>pass@4 on Spider with a GRPO-trained 4B model</span></div>
-        <div><b>12</b><span>Indic languages in one production ASR model</span></div>
-        <div><b>~40%</b><span>fewer Malayalam ASR errors from one targeted fix</span></div>
-        <div><b class="tbd">N×</b><span class="tbd">inference engine throughput vs. baseline</span></div>
-      </div>
-    </header>
+    <p>Hi, welcome to my website! I'm an ML engineer, currently teaching machines to understand Indian languages at Aiverbalyze.</p>
 
-    <section id="work">
-      <h2 class="label">Selected work</h2>
+    <p>I'm into <em>LLMs, RL post-training, agents, LLM inference and speech recognition</em>. Mostly I like what happens after pretraining: teaching a model with rewards, making it fast enough to talk to, and getting it to hear the languages people actually speak.</p>
 
-      <article class="project" style="--c: var(--c4)">
-        <div class="head">
-          <span class="kind">LLM inference · personal project</span>
-          <h3>An LLM inference engine, from scratch</h3>
-          <p class="pitch tbd">One line on what it does and why it's interesting. Ex: "Serves Llama-class models with continuous batching and a paged KV cache in N lines of Python/C++."</p>
-        </div>
-        <div class="grid">
-          <div><h4>The problem</h4><p class="tbd">What made serving hard, or what you wanted to understand.</p></div>
-          <div><h4>What I built</h4><ul class="tbd"><li>Feature 1 (e.g. paged KV cache)</li><li>Feature 2 (e.g. continuous batching)</li><li>Feature 3 (e.g. custom kernels / sampling)</li></ul></div>
-          <div><h4>Result</h4><p class="tbd">Tokens/sec, latency, or comparison with HF / vLLM.</p></div>
-        </div>
-        <p class="links tbd"><a href="#">Code →</a></p>
-      </article>
+    <p>I like building things from scratch until I understand every piece of them.</p>
 
-      <article class="project" style="--c: var(--c2)">
-        <div class="head">
-          <span class="kind">RL post-training · research project</span>
-          <h3>Teaching a 4B model to write SQL with GRPO</h3>
-          <p class="pitch">A small model, trained with a reward that only cares whether the query actually returns the right answer.</p>
-        </div>
-        <div class="metrics">
-          <div><b>+10%</b><span>pass@1 over the SFT checkpoint</span></div>
-          <div><b>86.7%</b><span>pass@4, Spider dev</span></div>
-          <div><b>70.7%</b><span>pass@4, BIRD dev</span></div>
-          <div><b>9,000+</b><span>validated chain-of-thought SQL examples</span></div>
-        </div>
-        <div class="grid">
-          <div><h4>The problem</h4><p>Supervised fine-tuning teaches a model to imitate SQL that looks right. Text-to-SQL is judged on whether the query runs and returns the right rows, which imitation doesn't optimize for.</p></div>
-          <div><h4>What I built</h4><ul>
-            <li>Generated reasoning traces with DeepSeek and kept only the 9,000+ that executed correctly on Spider and BIRD</li>
-            <li>SFT of Qwen3-4B-Instruct with 4-bit QLoRA</li>
-            <li>GRPO on top, with an execution-based reward that runs each candidate query against the database</li>
-          </ul></div>
-          <div><h4>Stack</h4><p class="stack">Qwen3-4B · DeepSeek · QLoRA · GRPO · Tinker API</p></div>
-        </div>
-      </article>
+    <p class="social">
+      <a href="https://github.com/Makireddyvighnesh">[github]</a>
+      <a href="#" class="todo">[linkedin]</a>
+      <a href="mailto:makireddyvighnesh@gmail.com">[makireddyvighnesh@gmail.com]</a>
+    </p>
 
-      <article class="project" style="--c: var(--c3)">
-        <div class="head">
-          <span class="kind">RL environments · agents · open source</span>
-          <h3>RL environments for Telugu</h3>
-          <p class="pitch tbd">One line: what the environments teach a model, and why Telugu.</p>
-        </div>
-        <div class="grid">
-          <div><h4>The problem</h4><p class="tbd">e.g. Few verifiable training signals exist for Indic languages, so RL post-training skips them.</p></div>
-          <div><h4>What I built</h4><ul class="tbd"><li>N environments / task types</li><li>How rewards are verified</li><li>Model trained with GRPO and setup</li></ul></div>
-          <div><h4>Result</h4><p class="tbd">Before/after scores on the tasks.</p></div>
-        </div>
-        <p class="links"><a href="https://github.com/Makireddyvighnesh/telugu-rl-envs">Code →</a></p>
-      </article>
+    <h2>Projects</h2>
+    <ul class="rows">
+      <li>
+        <a href="#" class="todo">LLM inference engine from scratch</a>
+        <span class="meta">INFERENCE</span>
+        <p>Serving a language model end to end, written by hand.</p>
+      </li>
+      <li>
+        <a href="https://github.com/Makireddyvighnesh/telugu-rl-envs">RL environments for Telugu, trained with GRPO</a>
+        <span class="meta">RL</span>
+        <p>Verifiable tasks so models can be post-trained in Telugu.</p>
+      </li>
+      <li>
+        <a href="#" class="todo">Text-to-SQL with SFT + GRPO on Qwen3-4B</a>
+        <span class="meta">RL</span>
+        <p>Execution-based rewards: +10% pass@1 over SFT, 86.7% pass@4 on Spider, 70.7% on BIRD.</p>
+      </li>
+      <li>
+        <a href="#" class="todo">Document Q&amp;A with RAG</a>
+        <span class="meta">LLM</span>
+        <p>LlamaIndex retrieval behind a Node.js API and React chat UI.</p>
+      </li>
+    </ul>
 
-      <article class="project" style="--c: var(--c1)">
-        <div class="head">
-          <span class="kind">ASR · Aiverbalyze · in production</span>
-          <h3>One speech model for 12 Indian languages</h3>
-          <p class="pitch">Fine-tuned a FastConformer RNN-T model (Nemotron ASR 3.5) to transcribe 12 Indic languages, then chased down where it went wrong.</p>
-        </div>
-        <div class="metrics">
-          <div><b>12</b><span>languages, one model</span></div>
-          <div><b>19.2%</b><span>average OIWER</span></div>
-          <div><b>~40%</b><span>Malayalam improvement</span></div>
-        </div>
-        <div class="grid">
-          <div><h4>The problem</h4><p>Multilingual models confuse closely related languages. Malayalam transcripts kept drifting into other scripts mid-sentence, and there wasn't enough real domain data to train it out.</p></div>
-          <div><h4>What I built</h4><ul>
-            <li>Synthetic, domain-specific multilingual datasets for fine-tuning</li>
-            <li>WER and error analysis that traced the failure to cross-language confusion</li>
-            <li>Masked language-token conditioning, which forced the decoder to stay in the target language</li>
-          </ul></div>
-          <div><h4>Stack</h4><p class="stack">NeMo · FastConformer · RNN-T · PyTorch</p></div>
-        </div>
-      </article>
-
-      <article class="project" style="--c: var(--c3)">
-        <div class="head">
-          <span class="kind">Agents · Aiverbalyze · real-time</span>
-          <h3>A voice agent you can interrupt</h3>
-          <p class="pitch">Speech in, LLM, speech out, built to cope with real phone audio and people who talk over it.</p>
-        </div>
-        <div class="grid">
-          <div><h4>The problem</h4><p>Voice agents that keep talking when you cut in feel broken. An offline ASR model also falls apart on noisy, unsegmented live audio.</p></div>
-          <div><h4>What I built</h4><ul>
-            <li>Barge-in: when the user speaks, active LLM generation and TTS playback are cancelled</li>
-            <li>Streaming preprocessing with DeepFilterNet denoising and Silero VAD v6</li>
-            <li>Utterance segmentation so an offline ASR model works in real time</li>
-          </ul></div>
-          <div><h4>Stack</h4><p class="stack">STT → LLM → TTS · DeepFilterNet · Silero VAD</p></div>
-        </div>
-      </article>
-    </section>
-
-    <section id="earlier">
-      <h2 class="label">Earlier</h2>
-      <div class="cards">
-        <div class="card">
-          <span class="kind">Computer vision · BigThinx · 2025–26</span>
-          <h3>Body and garment understanding from two photos</h3>
-          <p>Segmentation and pose pipeline (U2-Net, P3M-Net, DWPose, MediaPipe), with SMPL tested for 3D body mesh estimation. Low-light enhancement with LLFormer improved the pipeline by <b>30%</b>. Deployed with Gradio for real-time use.</p>
-        </div>
-        <div class="card">
-          <span class="kind">Medical AI · IF MedTech · 2025</span>
-          <h3>Medical imaging on very little data</h3>
-          <p>An INT8-quantized ViT at <b>89%</b> accuracy, Faster R-CNN plus DeepLabV3 segmentation at <b>0.64 IoU</b>, and a RAG assistant over a medical reference book with Llama 3 8B.</p>
-        </div>
-        <div class="card">
-          <span class="kind">Full stack · side project</span>
-          <h3>Document Q&amp;A with RAG</h3>
-          <p>LlamaIndex retrieval behind Node.js APIs, MongoDB and a React chat UI with auth and sessions.</p>
-        </div>
-        <div class="card">
-          <span class="kind">Education</span>
-          <h3>B.Tech, Computer Science</h3>
-          <p>IIIT Manipur, 2021–2025.</p>
-        </div>
-      </div>
-    </section>
-
-    <footer id="contact">
-      <h2>Let's talk about post-training, agents, inference, or speech.</h2>
-      <p>
-        <a href="mailto:makireddyvighnesh@gmail.com">makireddyvighnesh@gmail.com</a>
-        <a href="https://github.com/Makireddyvighnesh">GitHub</a>
-        <a class="tbd" href="#">LinkedIn</a>
-      </p>
-    </footer>
+    <h2>Work</h2>
+    <ul class="rows">
+      <li>
+        <span class="title">ML Engineer, Aiverbalyze</span>
+        <span class="meta">ASR<i>~</i>2026–now</span>
+        <p>One ASR model for 12 Indic languages (19.2% avg OIWER). Cut Malayalam errors ~40% by fixing cross-language confusion. Built barge-in so our voice agent stops talking when you interrupt it.</p>
+      </li>
+      <li>
+        <span class="title">Computer Vision Intern, BigThinx</span>
+        <span class="meta">VISION<i>~</i>2025–26</span>
+        <p>Segmentation and pose from two photos for fashion. Low-light enhancement improved the pipeline by 30%.</p>
+      </li>
+      <li>
+        <span class="title">AI/ML Intern, IF MedTech</span>
+        <span class="meta">MEDICAL<i>~</i>2025</span>
+        <p>INT8 ViT at 89% accuracy on a small medical dataset, segmentation at 0.64 IoU, and a RAG assistant on Llama 3.</p>
+      </li>
+      <li>
+        <span class="title">B.Tech CSE, IIIT Manipur</span>
+        <span class="meta">EDU<i>~</i>2021–25</span>
+      </li>
+    </ul>
   </main>
 </body>
 </html>
