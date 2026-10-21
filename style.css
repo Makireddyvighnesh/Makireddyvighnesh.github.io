@@ -180,9 +180,6 @@ footer {
   color: var(--muted);
 }
 
-/* Draft marker: link still needed. Remove before going live. */
-.todo, [data-todo] .title { text-decoration: underline dashed #e0b400 !important; text-underline-offset: 4px; }
-
 @media (max-width: 560px) {
   body { font-size: 18px; }
   main { padding: 64px 20px 56px; }
@@ -207,3 +204,9 @@ footer {
 .story td:first-child, .story th:first-child { text-align: left; padding-left: 0; }
 .story td b { color: var(--accent); font-weight: 500; }
 .story .links a { font: 13px var(--mono); margin-right: 16px; }
+.story code { font: 0.85em var(--mono); }
+
+@media (max-width: 560px) {
+  .story table { font-size: 11.5px; }
+  .story th, .story td { padding-left: 12px; }
+}

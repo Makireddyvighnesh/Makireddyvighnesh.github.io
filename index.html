@@ -25,7 +25,6 @@
       <p class="social">
         <a href="https://github.com/Makireddyvighnesh">[github]</a>
         <a href="https://huggingface.co/makireddyvighnesh">[huggingface]</a>
-        <a href="#" class="todo">[linkedin]</a>
         <a href="mailto:makireddyvighnesh@gmail.com">[email]</a>
       </p>
     </header>
@@ -82,17 +81,21 @@
         <summary>
           <span class="title">Mini LLM inference engine</span>
           <span class="meta">INFERENCE</span>
-          <span class="desc">Built to understand what really happens when an LLM serves requests. Qwen3-4B on an L4 GPU.</span>
+          <span class="desc">Serving Qwen3-4B (FP8) on one L4 GPU, one bottleneck at a time. Up to 19× better on the metric each technique targets.</span>
         </summary>
         <div class="story">
-          <p>I wanted to understand inference, not just call it: what the metrics mean, what breaks under load, and why. So I built a small engine and implemented the core ideas myself.</p>
-          <ul>
-            <li>Continuous batching and a request scheduler</li>
-            <li>Prefix caching to reuse shared prompt prefixes</li>
-            <li>Split-KV attention</li>
-            <li>CUDA graphs to cut launch overhead</li>
-          </ul>
-          <p class="stack">Qwen3-4B · NVIDIA L4</p>
+          <p>I wanted to understand inference, not just call it: what the metrics mean, what breaks under load, and why. So I built an engine from a plain decode loop upward, adding one technique at a time and measuring the exact metric it should fix.</p>
+          <table>
+            <tr><th>technique</th><th>without</th><th>with</th><th>gain</th></tr>
+            <tr><td>KV cache</td><td>113 ms/tok</td><td>55.9 ms/tok</td><td><b>2.0×</b></td></tr>
+            <tr><td>Continuous batching</td><td>9.65 s TTFT</td><td>0.57 s</td><td><b>17×</b></td></tr>
+            <tr><td>Paged KV + Triton</td><td>83.9 tok/s</td><td>195 tok/s</td><td><b>2.3×</b></td></tr>
+            <tr><td>CUDA Graphs</td><td>56.1 ms/tok</td><td>22.6 ms/tok</td><td><b>2.5×</b></td></tr>
+            <tr><td>Prefix cache</td><td>1,481 ms TTFT</td><td>114 ms</td><td><b>13×</b></td></tr>
+            <tr><td>Mixed batching</td><td>3.26 s stall</td><td>0.17 s</td><td><b>19×</b></td></tr>
+          </table>
+          <p>With CUDA Graph decode it serves 370 tok/s at batch 16, against 229 for Hugging Face <code>generate()</code>. Four fused Triton kernels cut 8K-token prefill by 23%. Every engine was checked token for token against Hugging Face, and all scheduling policies produce identical outputs.</p>
+          <p class="links"><a href="https://github.com/Makireddyvighnesh/mini-inference-engine">code and benchmarks ↗</a></p>
         </div>
       </details>
 
