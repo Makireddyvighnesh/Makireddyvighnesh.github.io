@@ -111,7 +111,7 @@
           <span class="desc">LFM2.5-2.6B trained with GRPO across agent harnesses on one L4. Beats the reference multi-harness RL results on all four shared harnesses, including two it never trained on.</span>
         </summary>
         <div class="story">
-          <p>Each task gives the agent Kaggle data files and a question. It explores the files with code in a sandbox and writes one answer, which a grader checks. I trained one model across four harnesses (Pi, mini-swe-agent, Codex CLI, Prime Agent) and held out OpenCode and Claude Code to test whether the skill transfers.</p>
+          <p>Each task gives the agent Kaggle data files and a question. It explores the files with code in a sandbox and writes one answer, which a grader checks. I trained LFM2.5-2.6B across four harnesses (Pi, mini-swe-agent, Codex CLI, Prime Agent) and held out OpenCode and Claude Code to test whether the skill transfers.</p>
           <p>Everything ran on a single L4: vLLM with FP8 weights and the GRPO trainer share the GPU, with a fresh LoRA on the frozen base, async generation, and truncated importance sampling to correct for stale samples and the FP8 sampler. Context was 24k, against 128k in the reference blog.</p>
           <figure class="chart pair" aria-label="Reference blog versus my model on test250, pass@1">
             <figcaption>test250 pass@1 <span class="key"><i class="k0"></i>blog (128k) <i class="k1"></i>mine (24k)</span></figcaption>
