@@ -106,6 +106,44 @@
 
       <details class="row">
         <summary>
+          <span class="title">Data-analysis agent: LFM2.5 + GRPO</span>
+          <span class="meta">RL · AGENTS</span>
+          <span class="desc">LFM2.5-2.6B trained with GRPO across agent harnesses on one L4. Beats the reference multi-harness RL results on all four shared harnesses, including two it never trained on.</span>
+        </summary>
+        <div class="story">
+          <p>Each task gives the agent Kaggle data files and a question. It explores the files with code in a sandbox and writes one answer, which a grader checks. I trained one model across four harnesses (Pi, mini-swe-agent, Codex CLI, Prime Agent) and held out OpenCode and Claude Code to test whether the skill transfers.</p>
+          <p>Everything ran on a single L4: vLLM with FP8 weights and the GRPO trainer share the GPU, with a fresh LoRA on the frozen base, async generation, and truncated importance sampling to correct for stale samples and the FP8 sampler. Context was 24k, against 128k in the reference blog.</p>
+          <figure class="chart pair" aria-label="Reference blog versus my model on test250, pass@1">
+            <figcaption>test250 pass@1 <span class="key"><i class="k0"></i>blog (128k) <i class="k1"></i>mine (24k)</span></figcaption>
+            <div class="metric"><span class="lbl">OpenCode<small>held out</small></span>
+              <div class="bars">
+                <div class="bar" title="Blog: 49.6"><span class="track"><i class="b0" style="--v:75.6%"></i><b>49.6</b></span></div>
+                <div class="bar" title="Mine: 52.0"><span class="track"><i style="--v:79.3%"></i><b>52.0</b></span></div>
+              </div></div>
+            <div class="metric"><span class="lbl">Claude Code<small>held out</small></span>
+              <div class="bars">
+                <div class="bar" title="Blog: 48.8"><span class="track"><i class="b0" style="--v:74.4%"></i><b>48.8</b></span></div>
+                <div class="bar" title="Mine: 54.0"><span class="track"><i style="--v:82.3%"></i><b>54.0</b></span></div>
+              </div></div>
+            <div class="metric"><span class="lbl">mini-swe-agent<small>trained on</small></span>
+              <div class="bars">
+                <div class="bar" title="Blog: 64.8"><span class="track"><i class="b0" style="--v:98.8%"></i><b>64.8</b></span></div>
+                <div class="bar" title="Mine: 65.6"><span class="track"><i style="--v:100%"></i><b>65.6</b></span></div>
+              </div></div>
+            <div class="metric"><span class="lbl">Codex CLI<small>trained on</small></span>
+              <div class="bars">
+                <div class="bar" title="Blog: 53.6"><span class="track"><i class="b0" style="--v:81.7%"></i><b>53.6</b></span></div>
+                <div class="bar" title="Mine: 56.8"><span class="track"><i style="--v:86.6%"></i><b>56.8</b></span></div>
+              </div></div>
+          </figure>
+          <p>The reward only pays for efficiency on correct answers: fewer tool calls, a smaller context, reading slices instead of whole files, and no invented tools. Invented-tool calls fell from about 3 to 0.02 per rollout, and training stayed stable for all 183 updates. The margins are within 1-attempt noise (about ±3 points), so a multi-attempt run is the next check.</p>
+          <p class="stack">LFM2.5-2.6B · GRPO · LoRA · vLLM (FP8) · Harbor sandboxes</p>
+          <p class="links"><a href="https://github.com/Makireddyvighnesh/lfm2.5-data-agent-grpo">code and results ↗</a></p>
+        </div>
+      </details>
+
+      <details class="row">
+        <summary>
           <span class="title">Mini LLM inference engine</span>
           <span class="meta">INFERENCE</span>
           <span class="desc">Serving Qwen3-4B (FP8) on one L4 GPU, one bottleneck at a time. Up to 19× better on the metric each technique targets.</span>
